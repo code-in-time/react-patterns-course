@@ -10,19 +10,17 @@ const withClapAnimation = WrappedComponent => {
 
   class WithClapAnimation extends Component {
 
+    animationTimeline = new mojs.Timeline()
     state = {
-      animationTimeLine: new mojs.Timeline()
+      // animate: () => {
+      //   console.log('%c Animate', 'background: red; color: #000')
+      // }
+      animationTimeline: this.animationTimeline
     }
 
 
-    // // Animation
-    // animate = () => {
-    //   console.log('%c Animate', 'background: yellow; color: #000')
-    // }
-
-
     render () {
-      return <WrappedComponent {...this.props} animationTimeLine={this.state.animationTimeLine} />
+      return <WrappedComponent {...this.props} animationTimeline={this.state.animationTimeline} />
     }
   }
   return WithClapAnimation
@@ -30,7 +28,7 @@ const withClapAnimation = WrappedComponent => {
 
 /**
  * The medium clap function
- * @param {object} param0 a reference to a function
+ * @param {object} props a reference to a function
  */
 const MediumClap = ({animationTimeline}) => {
   const MAX_USER_CLAP = 12
@@ -45,7 +43,7 @@ const MediumClap = ({animationTimeline}) => {
   const clapBtnHandler = e => {
 
     animationTimeline.replay()
-
+    console.log(animationTimeline)
     setClapState(prevState => ({
       isClicked: true,
       count: Math.min(prevState.count + 1, MAX_USER_CLAP),
