@@ -18,6 +18,15 @@ const withClapAnimation = WrappedComponent => {
       animationTimeline: this.animationTimeline
     }
 
+    componentDidMount() {
+      const scaleButton = new mojs.Html({
+        el: 'clap',
+        duration: 300,
+        scale: {1.3: 1},
+        easing: mojs.easing.ease.out
+      });
+    }
+
 
     render () {
       return <WrappedComponent {...this.props} animationTimeline={this.state.animationTimeline} />
