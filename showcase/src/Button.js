@@ -6,11 +6,11 @@ import { media } from './content/StyledContent'
 export const StyledButton = styled.button`
   background: ${({ primary }) => (primary ? LIGHT_PURPLE : DARK_GREY)};
   width: 100%;
-  font-size: 0.85rem;
+  fontSize: 0.85rem;
   border-radius: 10px;
   padding: 9px 0;
-  font-family: Avenir, Nunito, sans-serif;
-  font-weight: 300;
+  fontFamily: Avenir, Nunito, sans-serif;
+  fontWeight: 300;
   cursor: pointer;
   text-align: center;
   border: 0;
@@ -32,7 +32,7 @@ export const StyledButton = styled.button`
 
   ${media.md`
     width: 24vw;
-    font-size: 1rem;
+    fontSize: 1rem;
     border-radius: 30px;
     padding: 18px 5px;
   `}

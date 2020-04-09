@@ -23,7 +23,7 @@ export const SCREEN_SIZES = {
 
 export const media = Object.keys(SCREEN_SIZES).reduce((accumulator, label) => {
   // use em in breakpoints to work properly cross-browser and support users
-  // changing their browsers font-size: https://zellwk.com/blog/media-query-units/
+  // changing their browsers fontSize: https://zellwk.com/blog/media-query-units/
   const emSize = SCREEN_SIZES[label] / 16
   accumulator[label] = (...args) => css`
     @media (min-width: ${emSize}em) {
@@ -41,10 +41,10 @@ export const StyledFloatingBtn = styled.button`
   position: fixed;
   bottom: 15px;
   right: 15px;
-  font-size: 2.5rem;
+  fontSize: 2.5rem;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4);
-  font-family: Avenir, Nunito, sans-serif;
-  font-weight: 300;
+  fontFamily: Avenir, Nunito, sans-serif;
+  fontWeight: 300;
   cursor: pointer;
   text-align: center;
   border: 0;
@@ -90,7 +90,7 @@ export const StyledContentContainer = styled.div`
 `
 
 export const H1 = styled.h1`
-  font-size: 1.2rem;
+  fontSize: 1.2rem;
   color: ${() => `${ASH}`};
   padding: 0;
   margin: 0;
@@ -166,8 +166,8 @@ const TaglineContainer = styled.div`
 const TagLine = styled.p`
   padding: 0;
   margin: 0;
-  font-family: 'Kalam';
-  font-weight: 300;
+  fontFamily: 'Kalam';
+  fontWeight: 300;
   transform: rotateZ(-2.75deg) translateY(6px) translateX(-15px);
   color: ${({ isPrimary }) => (isPrimary ? OX : PALE_BLUE)};
 

@@ -15,9 +15,9 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     color: #b2bbc8;
-    font-family: Avenir, Nunito, sans-serif;
-    font-size: 16px;
-    font-weight: 500;
+    fontFamily: Avenir, Nunito, sans-serif;
+    fontSize: 16px;
+    fontWeight: 500;
   }
 
 `
