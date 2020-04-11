@@ -48,10 +48,29 @@ const withClapAnimation = WrappedComponent => {
         y: -80,
       })
 
+      const triangleBurst = new mojs.Burst({
+        parent: '#clap',
+        radius: {50: 95},
+        count: 5,
+        angle: 30,
+        children: {
+          shape: 'polygon',
+          radius: {6: 0},
+          stroke: 'rgba(211, 54,0,0)',
+          strokeWidth: 2,
+          angle: 210,
+          speed: 0.2,
+          delay: 30,
+          duration: tlDuration,
+          // https://cubic-bezier.com/#.17,.67,.79,-0.09
+          easing: mojs.easing.bezier(.17,.67,.79,-0.09)
+        }
+      })
+
       const clap = document.getElementById('clap')
       clap.style.transform = 'scale(1,1)'
 
-      const newAnimationTimeline = this.animationTimeline.add([scaleButton, countTotalAnimation, countCountAnimation])
+      const newAnimationTimeline = this.animationTimeline.add([scaleButton, countTotalAnimation, countCountAnimation, triangleBurst])
       this.setState({animationTimeline: newAnimationTimeline})
     }
 
