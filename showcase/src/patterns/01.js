@@ -70,7 +70,7 @@ const withClapAnimation = WrappedComponent => {
       const circleBurst = new mojs.Burst({
         parent: '#clap',
         radius: {50: 75},
-        count: 5,
+        count: 30,
         angle: 25,
         children: {
           shape: 'circle',
@@ -78,11 +78,12 @@ const withClapAnimation = WrappedComponent => {
           stroke: 'rgba(46, 49, 49, 1)',
           strokeWidth: 0,
           // angle: 0,
-          speed: 0.2,
-          delay: 30,
-          duration: tlDuration,
+          speed: 2,
+          delay:      'stagger(0, 20)',
+          duration: 200,
           // https://cubic-bezier.com/#.17,.67,.79,-0.09
           easing: mojs.easing.bezier(.17,.67,.79,-0.09)
+          // https://mojs.github.io/tutorials/burst/#children-options
         }
       })
 
