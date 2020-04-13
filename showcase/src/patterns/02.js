@@ -1,6 +1,13 @@
-import React, { Component, useState, useEffect, useCallback } from 'react'
-import styles from './index.css'
+import React, { useState, useLayoutEffect, useCallback } from 'react'
 import mojs from 'mo-js'
+import styles from './index.css'
+
+const initState = {
+  count: 0,
+  countTotal: 267,
+  isClicked: false
+}
+
 
 /**
  * custom hook for animation
@@ -8,15 +15,18 @@ import mojs from 'mo-js'
  
  const useClapAnimation = ({clapEl, countEl, clapTotalEl}) => {
 
-  debugger
    const [animationTimeline, setAnimationTimeline] = useState(() => new mojs.Timeline());
-  useEffect(() => {
+
+   useLayoutEffect(() => {
+
+    console.log('ff', [clapEl, countEl, clapTotalEl])
 
     if (!clapEl || !countEl || !clapTotalEl) {
       return
     }
 
-    console.log('xxxxxxxxxxxxxxx', clapEl)
+    console.log('hh', [clapEl, countEl, clapTotalEl])
+
     const tlDuration = 300
 
     const scaleButton = new mojs.Html({
@@ -34,7 +44,7 @@ import mojs from 'mo-js'
       y: { 0: -3 }
     });
 
-    const countCountAnimation = new mojs.Html({
+    const countAnimation = new mojs.Html({
       el: countEl,
       opacity: {0: 1},
       // delay: 1,
@@ -88,11 +98,19 @@ import mojs from 'mo-js'
 
     // const clap = document.getElementById('clap')
     // clap.style.transform = 'scale(1,1)'
+    // if (typeof clapEl === 'string') {
+    //   const clap = document.getElementById('clap')
+    //   clap.style.transform = 'scale(1,1)'
+    // } else {
+    //   clapEl.style.transform = 'scale(1,1)'
+    // }
+
+
 
     const newAnimationTimeline = animationTimeline.add([
       scaleButton,
       countTotalAnimation,
-      countCountAnimation,
+      countAnimation,
       triangleBurst,
       circleBurst
     ])
@@ -110,23 +128,17 @@ import mojs from 'mo-js'
  */
 const MediumClap = () => {
   const MAX_USER_CLAP = 12
-  const initState = {
-    count: 0,
-    countTotal: 267,
-    isClicked: false
-  }
+
   const [clapState, setClapState] = useState(initState)
   const { count, countTotal, isClicked } = clapState
+
   const [{clapRef, clapCountRef, clapTotalRef}, setRefState] = useState({})
 
-  const setRef = useCallback(() => { (node) => {
-
-    debugger
-    setRefState(prevState => ({
-      ...prevState,
+  const setRef = useCallback(node => {
+    setRefState(prevRefState => ({
+      ...prevRefState,
       [node.dataset.refkey]: node
     }))
-  }
   }, [])
 
   const animationTimeline = useClapAnimation({
