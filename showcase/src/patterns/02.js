@@ -96,14 +96,7 @@ const initState = {
       }
     })
 
-    // const clap = document.getElementById('clap')
-    // clap.style.transform = 'scale(1,1)'
-    // if (typeof clapEl === 'string') {
-    //   const clap = document.getElementById('clap')
-    //   clap.style.transform = 'scale(1,1)'
-    // } else {
-    //   clapEl.style.transform = 'scale(1,1)'
-    // }
+    clapEl.style.transform = 'scale(1,1)'
 
 
 
