@@ -98,8 +98,6 @@ const initState = {
 
     clapEl.style.transform = 'scale(1,1)'
 
-
-
     const newAnimationTimeline = animationTimeline.add([
       scaleButton,
       countTotalAnimation,
