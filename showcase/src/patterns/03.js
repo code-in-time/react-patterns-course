@@ -188,12 +188,13 @@ const ClapTotal = () => {
   Usage
 */
 const Usage = () => {
-  return
-  <MediumClap>
-    <ClapIcon />
-    <ClapCount />
-    <ClapTotal />
-  </MediumClap>
+  return(
+    <MediumClap>
+      <ClapIcon />
+      <ClapCount />
+      <ClapTotal />
+    </MediumClap>
+  )
 }
 
 export default Usage
