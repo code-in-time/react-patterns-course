@@ -184,6 +184,11 @@ const ClapTotal = () => {
   return <span ref={setRef} data-refkey="clapTotalRef" className={styles.total}>{countTotal}</ span>
 };
 
+MediumClap.icon = ClapIcon
+MediumClap.Count = ClapCount
+MediumClap.Total = ClapTotal
+
+
 /**
   Usage
 */
