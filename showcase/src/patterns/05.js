@@ -160,20 +160,20 @@ const MediumClap = ({children, onClap, values = null, style: userStyles = {}, cl
     isControlled ? onClap() :
     setClapState(prevState => ({
       isClicked: true,
-      count: Math.min(prevState.count + 1, MAX_USER_CLAP),
+      count: Math.min(count + 1, MAX_USER_CLAP),
       countTotal: count < MAX_USER_CLAP ? prevState.countTotal + 1 : prevState.countTotal
     }))
   }
 
-  const getState = useCallback(() => () => isControlled ? values : clapState, [isControlled, values, clapState])
-  
-  
-  
+  const getState = useCallback(() => (isControlled ? values : clapState), [isControlled, values, clapState])
 
-  const memoizedValue = useMemo(() => ({
-    ...clapState,
-    setRef,
-  }), [getState, setRef])
+  const memoizedValue = useMemo(
+    () => ({
+      ...getState(),
+      setRef
+    }),
+    [getState, setRef]
+  )
 
   const classNames = [styles.clap, className].join(' ').trim()
   // debugger
@@ -208,7 +208,7 @@ const ClapIcon = ({style: userStyles, className}) => {
   </ span>
 };
 
-const ClapCount = ({style: userStyles, className}) => {
+const ClapCount = ({style: userStyles = {}, className}) => {
   const { count, setRef } = useContext(MediumClapContext)
   const classNames = [styles.count, className].join(' ').trim()
 
