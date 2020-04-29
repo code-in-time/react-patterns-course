@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useCallback } from 'react'
+import React, { useState, useLayoutEffect, useCallback, useRef, useEffect } from 'react'
 import mojs from 'mo-js'
 import styles from './index.css'
 
@@ -150,6 +150,21 @@ const useClapState = (initState = INITIAL_STATE) => {
 }
 
 /**
+ * custom useEffect after mount hook
+ */
+const useEffectAfterMount = (cb, arrayDep) => {
+  const componentJustMounted = useRef(true)
+  useEffect(() => {
+
+    if(!componentJustMounted.current) {
+      return cb()
+    }
+
+    componentJustMounted.current = false
+  }, arrayDep)
+} 
+
+/**
  * The medium clap function
  * @param {object} props a reference to a function
  */
@@ -166,12 +181,14 @@ const MediumClap = () => {
 
   const clapBtnHandler = e => {
     animationTimeline.replay()
-    console.log('animationTimeline', animationTimeline)
-    updateClapState()
   }
 
+  useEffectAfterMount(()=> {
+    animationTimeline.replay()
+  }, [count])
+
   return (
-    <button ref={setRef} data-refkey="clapRef" className={styles.clap} onClick={clapBtnHandler}>
+    <button ref={setRef} data-refkey="clapRef" className={styles.clap} onClick={updateClapState}>
       <ClapIcon isClicked={isClicked} />
       <ClapCount count={count} setRef={setRef} />
       <ClapTotal countTotal={countTotal} setRef={setRef} />
