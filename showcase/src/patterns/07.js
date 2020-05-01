@@ -1,29 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@code-in-time 
-ohansemmanuel
-/
-advanced-react-patterns-ultrasimplified
-3
-5526
- Code
- Issues 0
- Pull requests 15 Actions
- Projects 0
- Wiki
- Security 0
- Insights
-advanced-react-patterns-ultrasimplified/showcase/src/patterns/07.js /
- Ohans Emmanuel complete props collection
-9e16ee9 on Jan 28
-257 lines (227 sloc)  6.39 KB
-  
 import React, {
   useState,
   useLayoutEffect,
@@ -281,15 +255,3 @@ const Usage = () => {
 }
 
 export default Usage
-© 2020 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
