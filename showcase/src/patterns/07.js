@@ -1,4 +1,36 @@
-import React, { useState, useLayoutEffect, useCallback, useRef, useEffect } from 'react'
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@code-in-time 
+ohansemmanuel
+/
+advanced-react-patterns-ultrasimplified
+3
+5526
+ Code
+ Issues 0
+ Pull requests 15 Actions
+ Projects 0
+ Wiki
+ Security 0
+ Insights
+advanced-react-patterns-ultrasimplified/showcase/src/patterns/07.js /
+ Ohans Emmanuel complete props collection
+9e16ee9 on Jan 28
+257 lines (227 sloc)  6.39 KB
+  
+import React, {
+  useState,
+  useLayoutEffect,
+  useCallback,
+  useRef,
+  useEffect
+} from 'react'
 import mojs from 'mo-js'
 import styles from './index.css'
 
@@ -9,93 +41,84 @@ const INITIAL_STATE = {
 }
 
 /**
- * custom hook for animation
+ * Custom Hook for animation
  */
- 
- const useClapAnimation = ({clapEl, countEl, clapTotalEl}) => {
+const useClapAnimation = ({ clapEl, countEl, clapTotalEl }) => {
+  const [animationTimeline, setAnimationTimeline] = useState(
+    () => new mojs.Timeline()
+  )
 
-   const [animationTimeline, setAnimationTimeline] = useState(() => new mojs.Timeline());
-
-   useLayoutEffect(() => {
-
-    console.log('ff', [clapEl, countEl, clapTotalEl])
-
+  useLayoutEffect(() => {
     if (!clapEl || !countEl || !clapTotalEl) {
       return
     }
 
-    console.log('hh', [clapEl, countEl, clapTotalEl])
-
     const tlDuration = 300
-
     const scaleButton = new mojs.Html({
       el: clapEl,
       duration: tlDuration,
-      scale: {1.3: 1},
+      scale: { 1.3: 1 },
       easing: mojs.easing.ease.out
-    });
-
-    const countTotalAnimation = new mojs.Html({
-      el: clapTotalEl,
-      opacity: {0: 1},
-      delay: (3 * tlDuration) / 2,
-      duration: tlDuration,
-      y: { 0: -3 }
-    });
-
-    const countAnimation = new mojs.Html({
-      el: countEl,
-      opacity: {0: 1},
-      // delay: 1,
-      duration: tlDuration,
-      y: { 0: -30 },
-      easing: mojs.easing.ease.out
-    }).then({
-      opacity: { 1: 0 },
-      delay: tlDuration/2,
-      y: -80,
     })
 
     const triangleBurst = new mojs.Burst({
       parent: clapEl,
-      radius: {50: 95},
+      radius: { 50: 95 },
       count: 5,
       angle: 30,
       children: {
         shape: 'polygon',
-        radius: {6: 0},
-        stroke: 'rgba(211, 54,0,0)',
+        radius: { 6: 0 },
+        stroke: 'rgba(211,54,0,0.5)',
         strokeWidth: 2,
         angle: 210,
-        speed: 0.2,
         delay: 30,
-        duration: tlDuration,
-        // https://cubic-bezier.com/#.17,.67,.79,-0.09
-        easing: mojs.easing.bezier(.17,.67,.79,-0.09)
+        speed: 0.2,
+        easing: mojs.easing.bezier(0.1, 1, 0.3, 1),
+        duration: tlDuration
       }
     })
 
     const circleBurst = new mojs.Burst({
       parent: clapEl,
-      radius: {50: 75},
-      count: 30,
+      radius: { 50: 75 },
       angle: 25,
+      duration: tlDuration,
       children: {
         shape: 'circle',
-        radius: {9: 0},
-        stroke: 'rgba(46, 49, 49, 1)',
-        strokeWidth: 0,
-        // angle: 0,
-        speed: 2,
-        delay:      'stagger(0, 20)',
-        duration: 200,
-        // https://cubic-bezier.com/#.17,.67,.79,-0.09
-        easing: mojs.easing.bezier(.17,.67,.79,-0.09)
-        // https://mojs.github.io/tutorials/burst/#children-options
+        fill: 'rgba(149,165,166,0.5)',
+        delay: 30,
+        speed: 0.2,
+        radius: { 3: 0 },
+        easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
       }
     })
 
-    clapEl.style.transform = 'scale(1,1)'
+    const countAnimation = new mojs.Html({
+      el: countEl,
+      opacity: { 0: 1 },
+      y: { 0: -30 },
+      duration: tlDuration
+    }).then({
+      opacity: { 1: 0 },
+      y: -80,
+      delay: tlDuration / 2
+    })
+
+    const countTotalAnimation = new mojs.Html({
+      el: clapTotalEl,
+      opacity: { 0: 1 },
+      delay: (3 * tlDuration) / 2,
+      duration: tlDuration,
+      y: { 0: -3 }
+    })
+
+    if (typeof clapEl === 'string') {
+      const clap = document.getElementById('clap')
+      clap.style.transform = 'scale(1,1)'
+    } else {
+      clapEl.style.transform = 'scale(1,1)'
+    }
 
     const newAnimationTimeline = animationTimeline.add([
       scaleButton,
@@ -105,18 +128,15 @@ const INITIAL_STATE = {
       circleBurst
     ])
     setAnimationTimeline(newAnimationTimeline)
-
   }, [clapEl, countEl, clapTotalEl])
 
-   return animationTimeline
- }
-
+  return animationTimeline
+}
 
 /**
- * useDomRef hook
+ * useDOMRef Hook
  */
-const useDomRef =() => {
-
+const useDOMRef = () => {
   const [DOMRef, setRefState] = useState({})
 
   const setRef = useCallback(node => {
@@ -132,82 +152,109 @@ const useDomRef =() => {
 /**
  * custom hook for useClapState
  */
-const useClapState = (initState = INITIAL_STATE) => {
-  const MAX_USER_CLAP = 12
-  const [clapState, setClapState] = useState(initState)
-  const {count, countTotal} = clapState
+const useClapState = (initialState = INITIAL_STATE) => {
+  const MAXIMUM_USER_CLAP = 50
+  const [clapState, setClapState] = useState(initialState)
+  const { count, countTotal } = clapState
 
   const updateClapState = useCallback(() => {
-    setClapState(({count, countTotal}) => ({
+    setClapState(({ count, countTotal }) => ({
       isClicked: true,
-      count: Math.min(count + 1, MAX_USER_CLAP),
-      countTotal: count < MAX_USER_CLAP ? countTotal + 1 : countTotal
+      count: Math.min(count + 1, MAXIMUM_USER_CLAP),
+      countTotal: count < MAXIMUM_USER_CLAP ? countTotal + 1 : countTotal
     }))
   }, [count, countTotal])
 
+  // props collection for 'click'
+  const togglerProps = {
+    onClick: updateClapState,
+    'aria-pressed': clapState.isClicked
+  }
 
-  return [clapState, updateClapState]
+  // props collection for 'count'
+  const counterProps = {
+    count,
+    'aria-valuemax': MAXIMUM_USER_CLAP,
+    'aria-valuemin': 0,
+    'aria-valuenow': count
+  }
+
+  return { clapState, updateClapState, togglerProps, counterProps }
 }
 
 /**
- * custom useEffect after mount hook
+ * custom useEffectAfterMount hook
  */
-const useEffectAfterMount = (cb, arrayDep) => {
+const useEffectAfterMount = (cb, deps) => {
   const componentJustMounted = useRef(true)
   useEffect(() => {
-
-    if(!componentJustMounted.current) {
+    if (!componentJustMounted.current) {
       return cb()
     }
-
     componentJustMounted.current = false
-  }, arrayDep)
-} 
-
-/**
- * The medium clap function
- * @param {object} props a reference to a function
- */
-const MediumClap = () => {
-
+  }, deps)
 }
 
-const ClapContainer = ({children, setRef, handleClick, ...restProps}) => {
+/**
+ * subcomponents
+ */
+
+const ClapContainer = ({ children, setRef, handleClick, ...restProps }) => {
   return (
     <button
       ref={setRef}
       className={styles.clap}
       onClick={handleClick}
-      {...restProps}>
+      {...restProps}
+    >
       {children}
     </button>
   )
 }
-
 const ClapIcon = ({ isClicked }) => {
-  return <span>
-    <svg className={`${styles.icon} ${isClicked && styles.checked}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150"><path d="M83.7 26.6c-.7 0-1.5.1-2.1.3v-1c0-4.1-3.3-7.5-7.5-7.5-.7 0-1.5.1-2.1.3v-1c0-4.1-3.3-7.5-7.5-7.5S57 13.5 57 17.7v1c-.7-.2-1.4-.3-2.1-.3-4.1 0-7.5 3.3-7.5 7.5v16.4c0 6.5-.4 13.1-1.3 19.6l-1-2.2c-1-2.2-3.5-8-10.8-7.5h-.2c-2 .1-3.8 1.3-4.7 3.1-.9 1.7-.8 3.8.2 5.4 1.6 2.6 3.1 7.7 3.8 11.2l.8 4.3c.7 3.9 2.3 7.6 4.7 10.8 0 .1.1.1.2.2l7.7 8.7c1.5 1.7 2.4 4 2.4 6.3v5.3c0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7v-5.3c0-3.6-1.3-7.1-3.7-9.8l-7.7-8.6c-1.8-2.5-3.1-5.5-3.7-8.5l-.9-4.3c-.7-3.9-2.5-9.6-4.5-13 0-.1-.1-.1 0-.2s.2-.2.4-.3h.2c2.8-.2 4.1.8 5.6 4.3l4.6 10.5s0 .1.1.1c.1.1.1.2.2.4 0 .1.1.1.2.2l.2.2.2.2.2.2c.1 0 .2.1.2.1.1 0 .1.1.2.1.2.1.3.1.5.1h1.2c.1 0 .2-.1.3-.1h.1s.1 0 .1-.1c.1 0 .2-.1.3-.2.1 0 .1-.1.2-.1.1-.1.2-.1.2-.2l.1-.1c.1-.1.1-.2.2-.3l.1-.1c.1-.1.1-.2.2-.4v-.1c.1-.2.1-.3.1-.5 1.8-9.7 2.8-19.6 2.8-29.5V25.9c0-1.2 1-2.1 2.1-2.1 1.2 0 2.1 1 2.1 2.1v27.2c0 1.5 1.2 2.7 2.7 2.7 1.5 0 2.7-1.2 2.7-2.7V17.8c0-1.2 1-2.1 2.1-2.1 1.2 0 2.1 1 2.1 2.1v35.3c0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7V25.9c0-1.2 1-2.1 2.1-2.1 1.2 0 2.1 1 2.1 2.1v27.2c0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7V34c0-1.2 1-2.1 2.1-2.1 1.2 0 2.1 1 2.1 2.1v38.9c0 5.2-1.3 10.4-3.8 15.1-3.2 6-4.9 12.8-4.9 19.6v.2c0 1.5 1.2 2.7 2.7 2.7 1.5 0 2.7-1.2 2.7-2.7v-.2c0-5.9 1.5-11.8 4.3-17.1 2.9-5.4 4.4-11.5 4.4-17.6V34c0-4.1-3.4-7.4-7.5-7.4z" /><text y="135" fontSize="5" fontWeight="bold" fontFamily="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Symbolon</text><text y="140" fontSize="5" fontWeight="bold" fontFamily="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
-
-  </ span>
-};
-
+  return (
+    <span>
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='-549 338 100.1 125'
+        className={`${styles.icon} ${isClicked && styles.checked}`}
+      >
+        <path d='M-471.2 366.8c1.2 1.1 1.9 2.6 2.3 4.1.4-.3.8-.5 1.2-.7 1-1.9.7-4.3-1-5.9-2-1.9-5.2-1.9-7.2.1l-.2.2c1.8.1 3.6.9 4.9 2.2zm-28.8 14c.4.9.7 1.9.8 3.1l16.5-16.9c.6-.6 1.4-1.1 2.1-1.5 1-1.9.7-4.4-.9-6-2-1.9-5.2-1.9-7.2.1l-15.5 15.9c2.3 2.2 3.1 3 4.2 5.3zm-38.9 39.7c-.1-8.9 3.2-17.2 9.4-23.6l18.6-19c.7-2 .5-4.1-.1-5.3-.8-1.8-1.3-2.3-3.6-4.5l-20.9 21.4c-10.6 10.8-11.2 27.6-2.3 39.3-.6-2.6-1-5.4-1.1-8.3z' />
+        <path d='M-527.2 399.1l20.9-21.4c2.2 2.2 2.7 2.6 3.5 4.5.8 1.8 1 5.4-1.6 8l-11.8 12.2c-.5.5-.4 1.2 0 1.7.5.5 1.2.5 1.7 0l34-35c1.9-2 5.2-2.1 7.2-.1 2 1.9 2 5.2.1 7.2l-24.7 25.3c-.5.5-.4 1.2 0 1.7.5.5 1.2.5 1.7 0l28.5-29.3c2-2 5.2-2 7.1-.1 2 1.9 2 5.1.1 7.1l-28.5 29.3c-.5.5-.4 1.2 0 1.7.5.5 1.2.4 1.7 0l24.7-25.3c1.9-2 5.1-2.1 7.1-.1 2 1.9 2 5.2.1 7.2l-24.7 25.3c-.5.5-.4 1.2 0 1.7.5.5 1.2.5 1.7 0l14.6-15c2-2 5.2-2 7.2-.1 2 2 2.1 5.2.1 7.2l-27.6 28.4c-11.6 11.9-30.6 12.2-42.5.6-12-11.7-12.2-30.8-.6-42.7m18.1-48.4l-.7 4.9-2.2-4.4m7.6.9l-3.7 3.4 1.2-4.8m5.5 4.7l-4.8 1.6 3.1-3.9' />
+      </svg>
+    </span>
+  )
+}
 const ClapCount = ({ count, setRef, ...restProps }) => {
-  return <span ref={setRef} className={styles.count} {...restProps}>+ {count}</ span>
-};
+  return (
+    <span ref={setRef} className={styles.count} {...restProps}>
+      + {count}
+    </span>
+  )
+}
 
-const ClapTotal = ({ countTotal, setRef, ...restProps }) => {
-  return <span ref={setRef} className={styles.total} {...restProps}>{countTotal}</ span>
-};
-
-
+const CountTotal = ({ countTotal, setRef, ...restProps }) => {
+  return (
+    <span ref={setRef} className={styles.total} {...restProps}>
+      {countTotal}
+    </span>
+  )
+}
 
 /**
-  Usage
-*/
+ * Usage
+ */
 const Usage = () => {
-  const [clapState, updateClapState] = useClapState()
+  const {
+    clapState,
+    updateClapState,
+    togglerProps,
+    counterProps
+  } = useClapState()
+
   const { count, countTotal, isClicked } = clapState
-  const [{clapRef, clapCountRef, clapTotalRef}, setRef] = useDomRef()
+
+  const [{ clapRef, clapCountRef, clapTotalRef }, setRef] = useDOMRef()
 
   const animationTimeline = useClapAnimation({
     clapEl: clapRef,
@@ -215,21 +262,34 @@ const Usage = () => {
     clapTotalEl: clapTotalRef
   })
 
-  const clapBtnHandler = e => {
-    animationTimeline.replay()
-  }
-
-  useEffectAfterMount(()=> {
+  useEffectAfterMount(() => {
     animationTimeline.replay()
   }, [count])
 
   return (
-    <ClapContainer setRef={setRef} handleClick={updateClapState} data-refkey="clapRef">
-      <ClapIcon isClicked={isClicked}/>
-      <ClapCount count={count} setRef={setRef} data-refkey="clapCountRef" />
-      <ClapTotal countTotal={countTotal} setRef={setRef}  data-refkey="clapTotalRef"/>
+    <ClapContainer setRef={setRef} data-refkey='clapRef' {...togglerProps}>
+      {/* <ClapIcon isClicked={isClicked} /> */}
+      🇳🇬
+      <ClapCount setRef={setRef} data-refkey='clapCountRef' {...counterProps} />
+      <CountTotal
+        countTotal={countTotal}
+        setRef={setRef}
+        data-refkey='clapTotalRef'
+      />
     </ClapContainer>
   )
 }
 
 export default Usage
+© 2020 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
